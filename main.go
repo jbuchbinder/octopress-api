@@ -13,6 +13,7 @@ var (
 	bind     = flag.String("bind", ":8888", "Port/IP for binding interface")
 	username = flag.String("username", "admin", "Username for BASIC auth")
 	password = flag.String("password", "password", "Password for BASIC auth")
+	rakecmd  = flag.String("rake", "rake", "Executable for rake command")
 	//log, _     = syslog.New(syslog.LOG_DEBUG, "octopress-api")
 	MySitesMap = SitesMap{}
 )

@@ -38,7 +38,7 @@ func deployHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cmd := "rake"
+	cmd := *rakecmd
 	args := []string{
 		"gen_deploy",
 		//"generate",
