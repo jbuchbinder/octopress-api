@@ -28,6 +28,8 @@ func main() {
 		return
 	}
 
+	log.Print("Octopress API v" + Version + " / API v" + CurrentApiVersion)
+
 	// Compile all instances into sites
 	log.Print("Compiling instances into sites")
 	for i := range instances {
