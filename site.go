@@ -25,7 +25,7 @@ type ConfigYaml struct {
 
 func GetSite(location string) (Site, error) {
 	// Open the _config.yml file, and look for the site name
-	if !Exists(location + "/_config.yml") {
+	if !fileExists(location + "/_config.yml") {
 		return Site{}, errors.New("No _config.yml file found for " + location + " instance")
 	}
 	filedata, err := ioutil.ReadFile(location + "/_config.yml")
