@@ -7,5 +7,5 @@
  * Packaging for distributions with wrappers, etc.
  * Go unit tests and benchmarks.
  * Friendly UI for those who aren't strictly talking to the API.
- * Versioned API (/api/VERSION/callgoeshere) for compatibility.
+ * <del>Versioned API (/api/VERSION/callgoeshere) for compatibility.</del>
 

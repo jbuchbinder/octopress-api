@@ -59,3 +59,14 @@ func deployHandler(w http.ResponseWriter, r *http.Request) {
 	b, _ := json.Marshal(resp)
 	fmt.Fprint(w, string(b))
 }
+
+func versionHandler(w http.ResponseWriter, r *http.Request) {
+	versionMap := map[string]string{
+		"version":           Version,
+		"currentApiVersion": CurrentApiVersion,
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	b, _ := json.Marshal(versionMap)
+	fmt.Fprint(w, string(b))
+}

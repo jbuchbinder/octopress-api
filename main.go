@@ -44,10 +44,16 @@ func main() {
 
 	r := mux.NewRouter()
 
-	sub := r.PathPrefix("/api").Subrouter()
+	api := r.PathPrefix("/api").Subrouter()
 
-	sub.HandleFunc("/sites", sitesHandler).Methods("GET")
-	sub.HandleFunc("/deploy/{site}", deployHandler).Methods("GET")
+	// Common to all version
+	api.HandleFunc("/version", versionHandler).Methods("GET")
+
+	// API Version 1.0
+	subV1_0 := api.PathPrefix("/1.0").Subrouter()
+	subV1_0.HandleFunc("/version", versionHandler).Methods("GET")
+	subV1_0.HandleFunc("/sites", sitesHandler).Methods("GET")
+	subV1_0.HandleFunc("/deploy/{site}", deployHandler).Methods("GET")
 
 	s := &http.Server{
 		Addr:           *bind,

@@ -11,14 +11,18 @@ with a REST-ful API.
 If you're planning on building a client based on this, please contact 
 [@jbuchbinder](https://twitter.com/jbuchbinder) before you start. ;)*
 
-### /api/sites
+### /api/version
+
+Returns information about the version of both the software and the current API version.
+
+### /api/1.0/sites
 
 Returns a list of all available Octopress sites.
 
-### /api/deploy/SITE
+### /api/1.0/deploy/SITE
 
 Issues a generate/deploy request for the specified site. SITE is the "name" parameter
-of a site, which is also the map key, returned by the **/api/sites** call.
+of a site, which is also the map key, returned by the **/api/VERSION/sites** call.
 
 ## TODO
 
