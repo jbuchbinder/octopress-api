@@ -12,11 +12,11 @@ If you're planning on building a client based on this, please contact
 [@jbuchbinder](https://twitter.com/jbuchbinder) before you start. ;)*
 
 
-## /api/sites
+### /api/sites
 
 Returns a list of all available Octopress sites.
 
-## /api/deploy/SITE
+### /api/deploy/SITE
 
 Issues a generate/deploy request for the specified site. SITE is the "name" parameter
 of a site, which is also the map key, returned by the **/api/sites** call.
