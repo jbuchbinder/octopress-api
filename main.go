@@ -2,20 +2,19 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	auth "github.com/abbot/go-http-auth"
 	"github.com/gorilla/mux"
-	"log/syslog"
+	"log"
 	"net/http"
 	"time"
 )
 
 var (
-	bind       = flag.String("bind", ":8888", "Port/IP for binding interface")
-	username   = flag.String("username", "admin", "Username for BASIC auth")
-	password   = flag.String("password", "password", "Password for BASIC auth")
-	log, _     = syslog.New(syslog.LOG_DEBUG, "octopress-api")
-	MySitesMap SitesMap
+	bind     = flag.String("bind", ":8888", "Port/IP for binding interface")
+	username = flag.String("username", "admin", "Username for BASIC auth")
+	password = flag.String("password", "password", "Password for BASIC auth")
+	//log, _     = syslog.New(syslog.LOG_DEBUG, "octopress-api")
+	MySitesMap = SitesMap{}
 )
 
 func main() {
@@ -23,17 +22,20 @@ func main() {
 	instances := flag.Args()
 
 	if len(instances) < 1 {
-		fmt.Println("No Octopress instances were specified.")
+		log.Print("No Octopress instances were specified.")
 		flag.PrintDefaults()
 		return
 	}
 
 	// Compile all instances into sites
+	log.Print("Compiling instances into sites")
 	for i := range instances {
+		log.Print("Processing site " + instances[i])
 		site, err := GetSite(instances[i])
 		if err != nil {
 			panic(err)
 		}
+		log.Print("Identified site name " + site.Name)
 		MySitesMap[site.Name] = site
 	}
 
@@ -46,8 +48,8 @@ func main() {
 
 	s := &http.Server{
 		Addr:           *bind,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
+		ReadTimeout:    90 * time.Second,
+		WriteTimeout:   90 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
 
@@ -58,5 +60,6 @@ func main() {
 	}))
 
 	// Run actual server
-	log.Err(s.ListenAndServe().Error())
+	log.Print("Starting server on " + *bind)
+	log.Print(s.ListenAndServe().Error())
 }
