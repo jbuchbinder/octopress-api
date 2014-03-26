@@ -55,6 +55,13 @@ Issues a new_post request, and returns both the filename and post file text.
 
 Updates a post, based on the post slug, with the post body data.
 
+## Building
+
+```
+go get -d
+go build
+```
+
 ## TODO
 
 See [TODO](https://github.com/jbuchbinder/octopress-api/blob/master/TODO.md).
