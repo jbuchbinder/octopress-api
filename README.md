@@ -24,6 +24,10 @@ Returns a list of all available Octopress sites.
 Issues a generate/deploy request for the specified site. SITE is the "name" parameter
 of a site, which is also the map key, returned by the **/api/VERSION/sites** call.
 
+### /api/1.0/post/list/SITE
+
+Lists all posts and meta information for the specified Octopress site.
+
 ### /api/1.0/post/new/SITE/POSTTITLE
 
 Issues a new_post request, and returns both the filename and post file text.
