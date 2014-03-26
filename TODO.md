@@ -1,6 +1,6 @@
 # TODO
 
- * Post creation and editing calls.
+ * <del>Post creation and editing calls.</del>
  * Asynchronous handling of calls, so that the user doesn't have to wait for the execution to complete before receiving a response. (Requires some sort of persistent data store)
  * Page creation and editing calls?
  * More intricate authentication scheme (or pluggable schemes) for multiple users?
