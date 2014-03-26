@@ -43,6 +43,10 @@ of a site, which is also the map key, returned by the **/api/VERSION/sites** cal
 Issues a generate/deploy request for the specified site. SITE is the "name" parameter
 of a site, which is also the map key, returned by the **/api/VERSION/sites** call.
 
+### /api/1.0/post/categories/SITE (GET)
+
+Lists all post categories for the specified Octopress site.
+
 ### /api/1.0/post/list/SITE (GET)
 
 Lists all posts and meta information for the specified Octopress site.

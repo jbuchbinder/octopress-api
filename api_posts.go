@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -28,6 +29,75 @@ type postYaml struct {
 	Permalink  string
 	Title      string
 	Categories []string
+}
+
+func postCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	posts := make(listPostsResponse)
+
+	w.Header().Add("Content-Type", "application/json")
+	vars := mux.Vars(r)
+	instance := vars["site"]
+
+	site, found := MySitesMap[instance]
+	if !found {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	// Get directory listing for Location /source/_posts/
+	fis, err := ioutil.ReadDir(site.Location + "/source/_posts/")
+	if err != nil {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	for iter := 0; iter < len(fis); iter++ {
+		slug := strings.Replace(fis[iter].Name(), ".md", "", 1)
+		item := listPostItem{
+			Slug:     slug,
+			Filename: fis[iter].Name(),
+		}
+
+		// Pull rest of information from yaml
+		filedata, err := ioutil.ReadFile(site.Location + "/source/_posts/" + fis[iter].Name())
+		if err != nil {
+			continue
+		}
+		postconfig := postYaml{}
+		err = yaml.Unmarshal([]byte(filedata), &postconfig)
+		if err != nil {
+			continue
+		}
+
+		item.Author = postconfig.Author
+		item.Title = postconfig.Title
+		item.Permalink = postconfig.Permalink
+		item.Categories = postconfig.Categories
+
+		posts[slug] = item
+	}
+
+	cMap := make(map[string]bool)
+
+	// Get unique categories as map keys
+	for k := range posts {
+		for cIdx := range posts[k].Categories {
+			if !cMap[posts[k].Categories[cIdx]] {
+				cMap[posts[k].Categories[cIdx]] = true
+			}
+		}
+	}
+
+	// Pull out keys into an array to return
+	resp := make([]string, 0)
+	for ck, _ := range cMap {
+		resp = append(resp, ck)
+	}
+
+	// But make sure we do an alpha sort first
+	sort.Strings(resp)
+
+	b, _ := json.Marshal(resp)
+	fmt.Fprint(w, string(b))
 }
 
 func listPostsHandler(w http.ResponseWriter, r *http.Request) {
