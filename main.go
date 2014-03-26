@@ -13,6 +13,7 @@ var (
 	bind     = flag.String("bind", ":8888", "Port/IP for binding interface")
 	username = flag.String("username", "admin", "Username for BASIC auth")
 	password = flag.String("password", "password", "Password for BASIC auth")
+	gitcmd   = flag.String("git", "git", "Executable for git command")
 	rakecmd  = flag.String("rake", "rake", "Executable for rake command")
 	//log, _     = syslog.New(syslog.LOG_DEBUG, "octopress-api")
 	MySitesMap = SitesMap{}
@@ -53,7 +54,8 @@ func main() {
 	subV1_0 := api.PathPrefix("/1.0").Subrouter()
 	subV1_0.HandleFunc("/version", versionHandler).Methods("GET")
 	subV1_0.HandleFunc("/sites", sitesHandler).Methods("GET")
-	subV1_0.HandleFunc("/deploy/{site}", deployHandler).Methods("GET")
+	subV1_0.HandleFunc("/site/commit/{site}", gitCommitHandler).Methods("GET")
+	subV1_0.HandleFunc("/site/deploy/{site}", deployHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/list/{site}", listPostsHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/new/{site}/{postname}", newPostHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/update/{site}/{slug}", updatePostHandler).Methods("POST")

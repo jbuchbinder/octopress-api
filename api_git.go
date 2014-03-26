@@ -10,13 +10,7 @@ import (
 
 // Define all callback functions for mux router here
 
-func sitesHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
-	b, _ := json.Marshal(MySitesMap)
-	fmt.Fprint(w, string(b))
-}
-
-func deployHandler(w http.ResponseWriter, r *http.Request) {
+func gitCommitHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	instance := vars["site"]
@@ -33,13 +27,27 @@ func deployHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cmd := *rakecmd
-	args := []string{
-		"gen_deploy",
-		//"generate",
+	// Two steps involved in this, both with commands.
+
+	// 1) Make sure all sources/_posts/*.md files are properly versioned
+	cmdAdd := *gitcmd
+	argsAdd := []string{
+		"add",
+		"source/_posts/*.md",
 	}
-	out, err := RunCmd(site.Location, cmd, args)
-	log.Print("Completed RunCmd")
+	// We honestly don't care if this works or not. Most of the time, it's not
+	// even necessary.
+	RunCmd(site.Location, cmdAdd, argsAdd)
+
+	// 2) Issue git commit command
+
+	cmdGit := *gitcmd
+	argsGit := []string{
+		"commit",
+		"source/_posts",
+	}
+	outGit, err := RunCmd(site.Location, cmdGit, argsGit)
+	log.Print("Completed RunCmd for git commit")
 	if err != nil {
 		resp.Success = false
 		resp.Message = err.Error()
@@ -50,18 +58,7 @@ func deployHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp.Success = true
-	resp.Message = out
+	resp.Message = outGit
 	b, _ := json.Marshal(resp)
-	fmt.Fprint(w, string(b))
-}
-
-func versionHandler(w http.ResponseWriter, r *http.Request) {
-	versionMap := map[string]string{
-		"version":           Version,
-		"currentApiVersion": CurrentApiVersion,
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	b, _ := json.Marshal(versionMap)
 	fmt.Fprint(w, string(b))
 }

@@ -11,6 +11,11 @@ var (
 	titleSanitizer = strings.NewReplacer("/", "_", " ", "_", "&", "_", ".", "_")
 )
 
+type CmdResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
 type SitesMap map[string]Site
 
 type Site struct {

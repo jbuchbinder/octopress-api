@@ -5,6 +5,20 @@
 Golang API for Octopress. This allows you to control your Octopress instance(s)
 with a REST-ful API.
 
+## Parameters
+
+```
+Usage of ./octopress-api:
+  -bind=":8888": Port/IP for binding interface
+  -git="git": Executable for git command
+  -password="password": Password for BASIC auth
+  -rake="rake": Executable for rake command
+  -username="admin": Username for BASIC auth
+```
+
+Paths to Octopress sites should be given as additional parameters. If no sites are
+specified, the service will not run.
+
 ## API
 
 *Please note that this is a work in progress, until a stable version has been reached.
@@ -19,7 +33,12 @@ Returns information about the version of both the software and the current API v
 
 Returns a list of all available Octopress sites.
 
-### /api/1.0/deploy/SITE (GET)
+### /api/1.0/site/commit/SITE (GET)
+
+Issues a git "commit" request for the specified site. SITE is the "name" parameter
+of a site, which is also the map key, returned by the **/api/VERSION/sites** call.
+
+### /api/1.0/site/deploy/SITE (GET)
 
 Issues a generate/deploy request for the specified site. SITE is the "name" parameter
 of a site, which is also the map key, returned by the **/api/VERSION/sites** call.
