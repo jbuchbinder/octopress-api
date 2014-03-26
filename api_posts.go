@@ -170,3 +170,60 @@ func newPostHandler(w http.ResponseWriter, r *http.Request) {
 	b, _ := json.Marshal(resp)
 	fmt.Fprint(w, string(b))
 }
+
+func updatePostHandler(w http.ResponseWriter, r *http.Request) {
+	resp := CmdResponse{}
+
+	// Decode post body
+	postbody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		resp.Success = false
+		resp.Message = "Unable to decode post body"
+		b, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(b))
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	vars := mux.Vars(r)
+	instance := vars["site"]
+	slug := vars["slug"]
+
+	site, found := MySitesMap[instance]
+	if !found {
+		resp.Success = false
+		resp.Message = "Unable to locate site '" + instance + "'"
+		b, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(b))
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	// Check to make sure this exists already
+	if !postExists(site.Location, slug) {
+		resp.Success = false
+		resp.Message = slug + " does not exist."
+		b, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(b))
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	// Write to post file
+	log.Print(site.Location + "/source/_posts/" + slug)
+	err = ioutil.WriteFile(site.Location+"/source/_posts/"+slug, postbody, 0777)
+	if err != nil {
+		resp.Success = false
+		resp.Message = err.Error()
+		b, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(b))
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	resp.Success = true
+	resp.Message = slug + " successfully written."
+	b, _ := json.Marshal(resp)
+	fmt.Fprint(w, string(b))
+}

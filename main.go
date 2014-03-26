@@ -56,6 +56,7 @@ func main() {
 	subV1_0.HandleFunc("/deploy/{site}", deployHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/list/{site}", listPostsHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/new/{site}/{postname}", newPostHandler).Methods("GET")
+	subV1_0.HandleFunc("/post/update/{site}/{slug}", updatePostHandler).Methods("POST")
 
 	s := &http.Server{
 		Addr:           *bind,

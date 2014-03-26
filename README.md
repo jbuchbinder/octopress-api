@@ -11,26 +11,30 @@ with a REST-ful API.
 If you're planning on building a client based on this, please contact 
 [@jbuchbinder](https://twitter.com/jbuchbinder) before you start. ;)*
 
-### /api/version
+### /api/version (GET)
 
 Returns information about the version of both the software and the current API version.
 
-### /api/1.0/sites
+### /api/1.0/sites (GET)
 
 Returns a list of all available Octopress sites.
 
-### /api/1.0/deploy/SITE
+### /api/1.0/deploy/SITE (GET)
 
 Issues a generate/deploy request for the specified site. SITE is the "name" parameter
 of a site, which is also the map key, returned by the **/api/VERSION/sites** call.
 
-### /api/1.0/post/list/SITE
+### /api/1.0/post/list/SITE (GET)
 
 Lists all posts and meta information for the specified Octopress site.
 
-### /api/1.0/post/new/SITE/POSTTITLE
+### /api/1.0/post/new/SITE/POSTTITLE (GET)
 
 Issues a new_post request, and returns both the filename and post file text.
+
+### /api/1.0/post/update/SITE/SLUG (POST)
+
+Updates a post, based on the post slug, with the post body data.
 
 ## TODO
 
