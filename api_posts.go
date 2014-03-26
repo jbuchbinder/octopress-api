@@ -15,18 +15,19 @@ import (
 
 type listPostsResponse map[string]listPostItem
 type listPostItem struct {
-	Slug      string `json:"slug"`
-	Title     string `json:"title"`
-	Date      string `json:"data"`
-	Filename  string `json:"filename"`
-	Permalink string `json:"permalink"`
-	Author    string `json:"author"`
+	Slug       string   `json:"slug"`
+	Title      string   `json:"title"`
+	Filename   string   `json:"filename"`
+	Permalink  string   `json:"permalink"`
+	Author     string   `json:"author"`
+	Categories []string `json:"categories"`
 }
 
 type postYaml struct {
-	Author    string
-	Permalink string
-	Title     string
+	Author     string
+	Permalink  string
+	Title      string
+	Categories []string
 }
 
 func listPostsHandler(w http.ResponseWriter, r *http.Request) {
@@ -69,6 +70,7 @@ func listPostsHandler(w http.ResponseWriter, r *http.Request) {
 		item.Author = postconfig.Author
 		item.Title = postconfig.Title
 		item.Permalink = postconfig.Permalink
+		item.Categories = postconfig.Categories
 
 		resp[slug] = item
 	}
