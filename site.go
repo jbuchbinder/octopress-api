@@ -23,7 +23,7 @@ type ConfigYaml struct {
 	Title string
 }
 
-func GetSite(location string) (Site, error) {
+func getSite(location string) (Site, error) {
 	// Open the _config.yml file, and look for the site name
 	if !fileExists(location + "/_config.yml") {
 		return Site{}, errors.New("No _config.yml file found for " + location + " instance")

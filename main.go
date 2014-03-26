@@ -34,7 +34,7 @@ func main() {
 	log.Print("Compiling instances into sites")
 	for i := range instances {
 		log.Print("Processing site " + instances[i])
-		site, err := GetSite(instances[i])
+		site, err := getSite(instances[i])
 		if err != nil {
 			panic(err)
 		}
