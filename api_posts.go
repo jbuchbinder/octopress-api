@@ -34,7 +34,7 @@ type postYaml struct {
 func postCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	posts := make(listPostsResponse)
 
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Type", *retmime)
 	vars := mux.Vars(r)
 	instance := vars["site"]
 
@@ -103,7 +103,7 @@ func postCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 func listPostsHandler(w http.ResponseWriter, r *http.Request) {
 	resp := make(listPostsResponse)
 
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Type", *retmime)
 	vars := mux.Vars(r)
 	instance := vars["site"]
 
@@ -160,7 +160,7 @@ type newPostResponse struct {
 func newPostHandler(w http.ResponseWriter, r *http.Request) {
 	resp := newPostResponse{}
 
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Type", *retmime)
 	vars := mux.Vars(r)
 	instance := vars["site"]
 	postName, err := url.QueryUnescape(vars["postname"])
@@ -257,7 +257,7 @@ func updatePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Type", *retmime)
 	vars := mux.Vars(r)
 	instance := vars["site"]
 	slug := vars["slug"]

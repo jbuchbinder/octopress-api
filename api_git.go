@@ -11,7 +11,7 @@ import (
 // Define all callback functions for mux router here
 
 func gitCommitHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Type", *retmime)
 	vars := mux.Vars(r)
 	instance := vars["site"]
 

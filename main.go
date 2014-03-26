@@ -9,12 +9,17 @@ import (
 	"time"
 )
 
+const (
+	DEFAULT_MIME_TYPE = "application/json"
+)
+
 var (
 	bind     = flag.String("bind", ":8888", "Port/IP for binding interface")
 	username = flag.String("username", "admin", "Username for BASIC auth")
 	password = flag.String("password", "password", "Password for BASIC auth")
 	gitcmd   = flag.String("git", "git", "Executable for git command")
 	rakecmd  = flag.String("rake", "rake", "Executable for rake command")
+	retmime  = flag.String("mime", DEFAULT_MIME_TYPE, "MIME type for JSON responses")
 	//log, _     = syslog.New(syslog.LOG_DEBUG, "octopress-api")
 	MySitesMap = SitesMap{}
 )

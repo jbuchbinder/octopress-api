@@ -11,6 +11,7 @@ with a REST-ful API.
 Usage of ./octopress-api:
   -bind=":8888": Port/IP for binding interface
   -git="git": Executable for git command
+  -mime="application/json": MIME type for JSON responses
   -password="password": Password for BASIC auth
   -rake="rake": Executable for rake command
   -username="admin": Username for BASIC auth

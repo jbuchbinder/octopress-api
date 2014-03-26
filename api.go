@@ -11,13 +11,13 @@ import (
 // Define all callback functions for mux router here
 
 func sitesHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Type", *retmime)
 	b, _ := json.Marshal(MySitesMap)
 	fmt.Fprint(w, string(b))
 }
 
 func deployHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Type", *retmime)
 	vars := mux.Vars(r)
 	instance := vars["site"]
 
@@ -61,7 +61,7 @@ func versionHandler(w http.ResponseWriter, r *http.Request) {
 		"currentApiVersion": CurrentApiVersion,
 	}
 
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Type", *retmime)
 	b, _ := json.Marshal(versionMap)
 	fmt.Fprint(w, string(b))
 }
