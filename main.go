@@ -14,12 +14,13 @@ const (
 )
 
 var (
-	bind     = flag.String("bind", ":8888", "Port/IP for binding interface")
-	username = flag.String("username", "admin", "Username for BASIC auth")
-	password = flag.String("password", "password", "Password for BASIC auth")
-	gitcmd   = flag.String("git", "git", "Executable for git command")
-	rakecmd  = flag.String("rake", "rake", "Executable for rake command")
-	retmime  = flag.String("mime", DEFAULT_MIME_TYPE, "MIME type for JSON responses")
+	bind       = flag.String("bind", ":8888", "Port/IP for binding interface")
+	username   = flag.String("username", "admin", "Username for BASIC auth")
+	password   = flag.String("password", "password", "Password for BASIC auth")
+	gitcmd     = flag.String("git", "git", "Executable for git command")
+	rakecmd    = flag.String("rake", "rake", "Executable for rake command")
+	retmime    = flag.String("mime", DEFAULT_MIME_TYPE, "MIME type for JSON responses")
+	uiLocation = flag.String("ui", "./ui", "Location of UI")
 	//log, _     = syslog.New(syslog.LOG_DEBUG, "octopress-api")
 	MySitesMap = SitesMap{}
 )
@@ -50,6 +51,9 @@ func main() {
 
 	r := mux.NewRouter()
 
+	// Handle UI prefix
+	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir(*uiLocation))))
+
 	api := r.PathPrefix("/api").Subrouter()
 
 	// Common to all version
@@ -65,6 +69,9 @@ func main() {
 	subV1_0.HandleFunc("/post/list/{site}", listPostsHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/new/{site}/{postname}", newPostHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/update/{site}/{slug}", updatePostHandler).Methods("POST")
+
+	// Redirection for home
+	r.HandleFunc("/", homeRedirectHandler)
 
 	s := &http.Server{
 		Addr:           *bind,
