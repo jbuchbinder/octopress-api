@@ -20,6 +20,7 @@ type SitesMap map[string]Site
 
 type Site struct {
 	Name     string `json:"name"`
+	Key      string `json:"key"`
 	Location string `json:"location"`
 }
 
@@ -45,7 +46,8 @@ func getSite(location string) (Site, error) {
 	}
 
 	site := Site{}
-	site.Name = titleSanitizer.Replace(config.Title)
+	site.Name = config.Title
+	site.Key = titleSanitizer.Replace(config.Title)
 	site.Location = location
 	return site, nil
 }

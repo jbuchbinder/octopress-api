@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>Octopress API</title>
+<script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="./js/version.js"></script>
+<script type="text/javascript" src="./js/purl.js"></script>
+<link rel="Stylesheet" type="text/css" href="./css/custom.css"></link>
+<script>
+
+</script>
+</head>
+<body>
+<header>
+<h1>Octopress UI</h1>
+<h2>Site Console</h2>
+<br class="clear"/>
+</header>
+<h2 id="site-name"/>
+<script>
+var SITE = $.url().param('site');
+var SITENAME = $.url().param('sitename');
+
+$('#site-name').html(SITENAME);
+
+$.getJSON( "../api/" + API_VERSION + "/post/list/" + SITE, function( data ) {
+  var items = [];
+  $.each( data, function( key, val ) {
+    var i = "<li id=\"" + key + "\" class=\"site-link\">";
+    i += "<a href=\"post.html?site=" + SITE + "&amp;slug=" + val["slug"] + "\">" + val["title"] + " (" + val["date"] + ")</a>";
+    i += "<ul class=\"category-tag\">";
+    $.each( val["categories"], function( cK, cV ) {
+      i += "<li><a href=\"category.html?site=" + SITE + "&amp;category=" + cV + "\">" + cV + "</a></li>";
+    });
+    i += "</ul>";
+    i += "</li>";
+    items.push( i );
+  });
+ 
+  $( "<ul/>", {
+    "class": "posts",
+    html: items.reverse().join( "" )
+  }).appendTo( "body" );
+});
+</script>
+</body>
+</html>

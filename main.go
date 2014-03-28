@@ -46,7 +46,7 @@ func main() {
 			panic(err)
 		}
 		log.Print("Identified site name " + site.Name)
-		MySitesMap[site.Name] = site
+		MySitesMap[site.Key] = site
 	}
 
 	r := mux.NewRouter()

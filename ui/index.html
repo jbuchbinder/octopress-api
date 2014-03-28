@@ -1,8 +1,29 @@
 <html>
 <head>
 <title>Octopress API</title>
+<script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="./js/version.js"></script>
+<link rel="Stylesheet" type="text/css" href="./css/custom.css"></link>
 </head>
 <body>
-UI
+<header>
+<h1>Octopress UI</h1>
+<h2>Sites</h2>
+<br class="clear" />
+</header>
+<div id="site-list" />
+<script>
+$.getJSON( "../api/" + API_VERSION + "/sites", function( data ) {
+  var items = [];
+  $.each( data, function( key, val ) {
+    items.push( "<li id=\"" + key + "\" class=\"site-link\"><a href=\"site.html?site=" + val["key"] + "&amp;sitename=" + encodeURIComponent(val["name"]) + "\">" + val["name"] + "</a></li>" );
+  });
+ 
+  $( "<ul/>", {
+    "class": "sites",
+    html: items.join( "" )
+  }).appendTo( "#site-list" );
+});
+</script>
 </body>
 </html>

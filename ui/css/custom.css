@@ -1,0 +1,55 @@
+body {
+	font-family: sans-serif, helvetica, verdana;
+}
+
+header {
+	margin-top: 0px;
+	border-bottom: 1px solid #000;
+}
+
+header h1 {
+	float: left;
+}
+
+header h2 {
+	float: right;
+}
+
+.clear {
+	clear: both;
+}
+
+#footer a {
+	text-decoration: none;
+	color: #777;
+}
+
+// Fix form rendering issue
+input[type=checkbox] {
+	margin-top: 5px !important;
+	margin-bottom: 5px !important;
+}
+
+ul.posts li {
+	padding-bottom: 5px;
+}
+
+ul.category-tag {
+	list-style: none;
+	display: inline-block;
+}
+
+ul.category-tag li {
+	display: inline;
+	border: 1px solid #000;
+	background-color: #ccc;
+	-webkit-border-radius: 5px;
+	margin-right: 10px;
+	padding: 0 5px 0 5px;
+}
+
+ul.category-tag li a {
+	font-size: 8pt;
+	text-decoration: none;
+	color: #000;
+}

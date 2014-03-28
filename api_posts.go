@@ -21,6 +21,7 @@ type listPostItem struct {
 	Filename   string   `json:"filename"`
 	Permalink  string   `json:"permalink"`
 	Author     string   `json:"author"`
+	Date       string   `json:"date"`
 	Categories []string `json:"categories"`
 }
 
@@ -136,6 +137,10 @@ func listPostsHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			continue
 		}
+
+		// First three parts of slug...
+		slugParts := strings.Split(item.Slug, "-")
+		item.Date = slugParts[0] + "-" + slugParts[1] + "-" + slugParts[2]
 
 		item.Author = postconfig.Author
 		item.Title = postconfig.Title
