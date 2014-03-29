@@ -15,12 +15,20 @@
 <h2>Site Console</h2>
 <br class="clear"/>
 </header>
-<h2 id="site-name"/>
+<h2 id="site-name"></h2>
+<div id="remove-tag"></div>
 <script>
 var SITE = $.url().param('site');
 var SITENAME = $.url().param('sitename');
+var CATEGORY = $.url().param('category');
 
 $('#site-name').html(SITENAME);
+
+if (CATEGORY != "" && typeof(CATEGORY) !== 'undefined') {
+  $('#remove-tag').html(
+    "Displaying results for category : <b>" + CATEGORY + "</b><br/>" +
+    "<a href=\"site.html?site=" + SITE + "&amp;sitename=" + encodeURIComponent(SITENAME) + "\">Clear Category</a>");
+}
 
 $.getJSON( "../api/" + API_VERSION + "/post/list/" + SITE, function( data ) {
   var items = [];
@@ -28,12 +36,21 @@ $.getJSON( "../api/" + API_VERSION + "/post/list/" + SITE, function( data ) {
     var i = "<li id=\"" + key + "\" class=\"site-link\">";
     i += "<a href=\"post.html?site=" + SITE + "&amp;sitename=" + encodeURIComponent(SITENAME) + "&amp;slug=" + val["slug"] + "\">" + val["title"] + " (" + val["date"] + ")</a>";
     i += "<ul class=\"category-tag\">";
+    var displayMe = false;
+    if (CATEGORY == '' || typeof(CATEGORY) === 'undefined') {
+      displayMe = true;
+    }
     $.each( val["categories"], function( cK, cV ) {
-      i += "<li><a href=\"category.html?site=" + SITE + "&amp;sitename=" + encodeURIComponent(SITENAME) + "&amp;category=" + cV + "\">" + cV + "</a></li>";
+      if (CATEGORY == cV) {
+        displayMe = true;
+      }
+      i += "<li><a href=\"site.html?site=" + SITE + "&amp;sitename=" + encodeURIComponent(SITENAME) + "&amp;category=" + cV + "\">" + cV + "</a></li>";
     });
     i += "</ul>";
     i += "</li>";
-    items.push( i );
+    if (displayMe) {
+      items.push( i );
+    }
   });
  
   $( "<ul/>", {

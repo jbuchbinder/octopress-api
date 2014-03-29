@@ -64,6 +64,11 @@ Issues a new_post request, and returns both the filename and post file text.
 
 Updates a post, based on the post slug, with the post body data.
 
+## UI
+
+A basic UI is provided. Accessing the root URL of the server will redirect
+to the basic UI.
+
 ## Building
 
 ```
