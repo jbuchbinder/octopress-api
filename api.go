@@ -8,7 +8,24 @@ import (
 	"net/http"
 )
 
-// Define all callback functions for mux router here
+type apiFailureResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+// apiFail triggers a failure response from the API with a specified
+// message.
+func apiFail(w http.ResponseWriter, r *http.Request, message string) {
+	resp := apiFailureResponse{
+		Success: false,
+		Message: message,
+	}
+	b, _ := json.Marshal(resp)
+	fmt.Fprint(w, string(b))
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// Define all generic callback functions for mux router here
 
 func sitesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", *retmime)
@@ -25,11 +42,7 @@ func deployHandler(w http.ResponseWriter, r *http.Request) {
 
 	site, found := MySitesMap[instance]
 	if !found {
-		resp.Success = false
-		resp.Message = "Unable to locate site '" + instance + "'"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, "Unable to locate site '"+instance+"'")
 		return
 	}
 
@@ -41,11 +54,7 @@ func deployHandler(w http.ResponseWriter, r *http.Request) {
 	out, err := RunCmd(site.Location, cmd, args)
 	log.Print("Completed RunCmd")
 	if err != nil {
-		resp.Success = false
-		resp.Message = err.Error()
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
 

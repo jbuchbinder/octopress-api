@@ -19,11 +19,7 @@ func gitCommitHandler(w http.ResponseWriter, r *http.Request) {
 
 	site, found := MySitesMap[instance]
 	if !found {
-		resp.Success = false
-		resp.Message = "Unable to locate site '" + instance + "'"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, "Unable to locate site '"+instance+"'")
 		return
 	}
 
@@ -49,11 +45,7 @@ func gitCommitHandler(w http.ResponseWriter, r *http.Request) {
 	outGit, err := RunCmd(site.Location, cmdGit, argsGit)
 	log.Print("Completed RunCmd for git commit")
 	if err != nil {
-		resp.Success = false
-		resp.Message = err.Error()
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
 

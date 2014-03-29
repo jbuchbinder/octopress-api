@@ -175,42 +175,26 @@ func getPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	site, found := MySitesMap[instance]
 	if !found {
-		resp.Success = false
-		resp.Message = "Unable to locate site '" + instance + "'"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, "Unable to locate site '"+instance+"'")
 		return
 	}
 
 	fullPost := site.Location + "/source/_posts/" + slug + ".md"
 	if !fileExists(fullPost) {
-		resp.Success = false
-		resp.Message = fullPost + " does not exist"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, fullPost+" does not exist")
 		return
 	}
 
 	newpost, err := ioutil.ReadFile(fullPost)
 	if err != nil {
-		resp.Success = false
-		resp.Message = err.Error()
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
 
 	postconfig := postYaml{}
 	err = yaml.Unmarshal([]byte(newpost), &postconfig)
 	if err != nil {
-		resp.Success = false
-		resp.Message = err.Error()
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
 
@@ -235,21 +219,13 @@ func newPostHandler(w http.ResponseWriter, r *http.Request) {
 	instance := vars["site"]
 	postName, err := url.QueryUnescape(vars["postname"])
 	if err != nil {
-		resp.Success = false
-		resp.Message = "Unable to decode post name '" + vars["postname"] + "'"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, "Unable to decode post name '"+vars["postname"]+"'")
 		return
 	}
 
 	site, found := MySitesMap[instance]
 	if !found {
-		resp.Success = false
-		resp.Message = "Unable to locate site '" + instance + "'"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, "Unable to locate site '"+instance+"'")
 		return
 	}
 
@@ -262,11 +238,7 @@ func newPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(out)
 	log.Print("Completed RunCmd")
 	if err != nil {
-		resp.Success = false
-		resp.Message = err.Error()
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
 
@@ -275,32 +247,20 @@ func newPostHandler(w http.ResponseWriter, r *http.Request) {
 	res := re.FindStringSubmatch(out)
 
 	if len(res) < 2 {
-		resp.Success = false
-		resp.Message = "Unable to fetch filename from regex"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, "Unable to fetch filename from regex")
 		return
 	}
 
 	log.Print(site.Location + "/" + res[1])
 	newpost, err := ioutil.ReadFile(site.Location + "/" + res[1])
 	if err != nil {
-		resp.Success = false
-		resp.Message = err.Error()
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
 
 	slug, err := postSlugFromFilename(res[1])
 	if err != nil {
-		resp.Success = false
-		resp.Message = err.Error()
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
 
@@ -319,11 +279,7 @@ func updatePostHandler(w http.ResponseWriter, r *http.Request) {
 	// Decode post body
 	postbody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		resp.Success = false
-		resp.Message = "Unable to decode post body"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, "Unable to decode post body")
 		return
 	}
 
@@ -334,21 +290,13 @@ func updatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	site, found := MySitesMap[instance]
 	if !found {
-		resp.Success = false
-		resp.Message = "Unable to locate site '" + instance + "'"
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, "Unable to locate site '"+instance+"'")
 		return
 	}
 
 	// Check to make sure this exists already
 	if !postExists(site.Location, slug) {
-		resp.Success = false
-		resp.Message = slug + " does not exist."
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, slug+" does not exist.")
 		return
 	}
 
@@ -356,11 +304,7 @@ func updatePostHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print(site.Location + "/source/_posts/" + slug)
 	err = ioutil.WriteFile(site.Location+"/source/_posts/"+slug, postbody, 0777)
 	if err != nil {
-		resp.Success = false
-		resp.Message = err.Error()
-		b, _ := json.Marshal(resp)
-		fmt.Fprint(w, string(b))
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
 
