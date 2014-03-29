@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"sort"
 	"strings"
 )
 
@@ -30,11 +29,10 @@ type postYaml struct {
 	Permalink  string
 	Title      string
 	Categories []string
+	Date       string
 }
 
 func postCategoriesHandler(w http.ResponseWriter, r *http.Request) {
-	posts := make(listPostsResponse)
-
 	w.Header().Add("Content-Type", *retmime)
 	vars := mux.Vars(r)
 	instance := vars["site"]
@@ -45,57 +43,11 @@ func postCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get directory listing for Location /source/_posts/
-	fis, err := ioutil.ReadDir(site.Location + "/source/_posts/")
+	resp, err := categoriesForSite(site)
 	if err != nil {
-		w.WriteHeader(http.StatusNoContent)
+		apiFail(w, r, err.Error())
 		return
 	}
-	for iter := 0; iter < len(fis); iter++ {
-		slug := strings.Replace(fis[iter].Name(), ".md", "", 1)
-		item := listPostItem{
-			Slug:     slug,
-			Filename: fis[iter].Name(),
-		}
-
-		// Pull rest of information from yaml
-		filedata, err := ioutil.ReadFile(site.Location + "/source/_posts/" + fis[iter].Name())
-		if err != nil {
-			continue
-		}
-		postconfig := postYaml{}
-		err = yaml.Unmarshal([]byte(filedata), &postconfig)
-		if err != nil {
-			continue
-		}
-
-		item.Author = postconfig.Author
-		item.Title = postconfig.Title
-		item.Permalink = postconfig.Permalink
-		item.Categories = postconfig.Categories
-
-		posts[slug] = item
-	}
-
-	cMap := make(map[string]bool)
-
-	// Get unique categories as map keys
-	for k := range posts {
-		for cIdx := range posts[k].Categories {
-			if !cMap[posts[k].Categories[cIdx]] {
-				cMap[posts[k].Categories[cIdx]] = true
-			}
-		}
-	}
-
-	// Pull out keys into an array to return
-	resp := make([]string, 0)
-	for ck, _ := range cMap {
-		resp = append(resp, ck)
-	}
-
-	// But make sure we do an alpha sort first
-	sort.Strings(resp)
 
 	b, _ := json.Marshal(resp)
 	fmt.Fprint(w, string(b))
@@ -161,6 +113,8 @@ type newPostResponse struct {
 	PostText   string   `json:"post"`
 	Slug       string   `json:"slug"`
 	Title      string   `json:"title"`
+	Date       string   `json:"date"`
+	PostHeader string   `json:"header"`
 	Permalink  string   `json:"permalink"`
 	Categories []string `json:"categories"`
 }
@@ -185,28 +139,22 @@ func getPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newpost, err := ioutil.ReadFile(fullPost)
+	post, err := parsePost(site, slug)
 	if err != nil {
 		apiFail(w, r, err.Error())
 		return
 	}
-
-	postconfig := postYaml{}
-	err = yaml.Unmarshal([]byte(newpost), &postconfig)
-	if err != nil {
-		apiFail(w, r, err.Error())
-		return
-	}
-
-	resp.Title = postconfig.Title
-	resp.Permalink = postconfig.Permalink
-	resp.Categories = postconfig.Categories
 
 	resp.Success = true
 	resp.Message = ""
-	resp.PostFile = "source/_posts/" + slug + ".md"
-	resp.PostText = string(newpost)
+	resp.Title = post.Title
+	resp.PostFile = post.Filename
+	resp.PostHeader = post.YamlHeader
+	resp.PostText = post.Body
 	resp.Slug = slug
+	resp.Categories = post.Categories
+	resp.Permalink = post.Permalink
+	resp.Date = post.Date
 	b, _ := json.Marshal(resp)
 	fmt.Fprint(w, string(b))
 }
