@@ -53,3 +53,24 @@ ul.category-tag li a {
 	text-decoration: none;
 	color: #000;
 }
+
+textarea {
+	width: 90%;
+	padding: 10px;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+input[type=text] {
+	width: 90%;
+	padding: 10px;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+label {
+	width: 100px;
+	vertical-align: top;
+}

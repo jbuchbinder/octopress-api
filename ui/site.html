@@ -26,10 +26,10 @@ $.getJSON( "../api/" + API_VERSION + "/post/list/" + SITE, function( data ) {
   var items = [];
   $.each( data, function( key, val ) {
     var i = "<li id=\"" + key + "\" class=\"site-link\">";
-    i += "<a href=\"post.html?site=" + SITE + "&amp;slug=" + val["slug"] + "\">" + val["title"] + " (" + val["date"] + ")</a>";
+    i += "<a href=\"post.html?site=" + SITE + "&amp;sitename=" + encodeURIComponent(SITENAME) + "&amp;slug=" + val["slug"] + "\">" + val["title"] + " (" + val["date"] + ")</a>";
     i += "<ul class=\"category-tag\">";
     $.each( val["categories"], function( cK, cV ) {
-      i += "<li><a href=\"category.html?site=" + SITE + "&amp;category=" + cV + "\">" + cV + "</a></li>";
+      i += "<li><a href=\"category.html?site=" + SITE + "&amp;sitename=" + encodeURIComponent(SITENAME) + "&amp;category=" + cV + "\">" + cV + "</a></li>";
     });
     i += "</ul>";
     i += "</li>";

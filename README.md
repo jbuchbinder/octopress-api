@@ -52,6 +52,10 @@ Lists all post categories for the specified Octopress site.
 
 Lists all posts and meta information for the specified Octopress site.
 
+### /api/1.0/post/get/SITE/POSTTITLE (GET)
+
+Gets a copy of the specified post.
+
 ### /api/1.0/post/new/SITE/POSTTITLE (GET)
 
 Issues a new_post request, and returns both the filename and post file text.

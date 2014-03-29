@@ -67,6 +67,7 @@ func main() {
 	subV1_0.HandleFunc("/site/deploy/{site}", deployHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/categories/{site}", postCategoriesHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/list/{site}", listPostsHandler).Methods("GET")
+	subV1_0.HandleFunc("/post/get/{site}/{slug}", getPostHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/new/{site}/{postname}", newPostHandler).Methods("GET")
 	subV1_0.HandleFunc("/post/update/{site}/{slug}", updatePostHandler).Methods("POST")
 

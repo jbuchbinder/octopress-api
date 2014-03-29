@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Octopress API</title>
+<script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="./js/version.js"></script>
+<script type="text/javascript" src="./js/purl.js"></script>
+<link rel="Stylesheet" type="text/css" href="./css/custom.css"></link>
+<script>
+
+</script>
+</head>
+<body>
+<header>
+<h1>Octopress UI</h1>
+<h2>Edit Post</h2>
+<br class="clear"/>
+</header>
+<h2 id="site-name"></h2>
+<script>
+var SITE = $.url().param('site');
+var SITENAME = $.url().param('sitename');
+var SLUG = $.url().param('slug');
+
+$('#site-name').html(SITENAME);
+
+$.getJSON( "../api/" + API_VERSION + "/post/get/" + SITE + "/" + SLUG, function( data ) {
+
+  $("#post").val(data["post"]); 
+  $("#slug").val(data["slug"]); 
+  $("#title").val(data["title"]); 
+  $("#site-name").val(SITE); 
+});
+</script>
+<div>
+	<label for="title">Post Name</label>
+	<input type="text" id="title" name="title" />
+</div>
+<div>
+	<label for="slug">Post Slug</label>
+	<input type="text" id="slug" name="slug" />
+</div>
+<div>
+	<label for="post">Post Text</label>
+	<textarea id="post" name="post" style="height: 500px;"></textarea>
+</div>
+</body>
+</html>

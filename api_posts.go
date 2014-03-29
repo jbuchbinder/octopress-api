@@ -155,11 +155,76 @@ func listPostsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type newPostResponse struct {
-	Success  bool   `json:"success"`
-	Message  string `json:"message"`
-	PostFile string `json:"file"`
-	PostText string `json:"post"`
-	Slug     string `json:"slug"`
+	Success    bool     `json:"success"`
+	Message    string   `json:"message"`
+	PostFile   string   `json:"file"`
+	PostText   string   `json:"post"`
+	Slug       string   `json:"slug"`
+	Title      string   `json:"title"`
+	Permalink  string   `json:"permalink"`
+	Categories []string `json:"categories"`
+}
+
+func getPostHandler(w http.ResponseWriter, r *http.Request) {
+	resp := newPostResponse{}
+
+	w.Header().Add("Content-Type", *retmime)
+	vars := mux.Vars(r)
+	instance := vars["site"]
+	slug := vars["slug"]
+
+	site, found := MySitesMap[instance]
+	if !found {
+		resp.Success = false
+		resp.Message = "Unable to locate site '" + instance + "'"
+		b, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(b))
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	fullPost := site.Location + "/source/_posts/" + slug + ".md"
+	if !fileExists(fullPost) {
+		resp.Success = false
+		resp.Message = fullPost + " does not exist"
+		b, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(b))
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	newpost, err := ioutil.ReadFile(fullPost)
+	if err != nil {
+		resp.Success = false
+		resp.Message = err.Error()
+		b, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(b))
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	postconfig := postYaml{}
+	err = yaml.Unmarshal([]byte(newpost), &postconfig)
+	if err != nil {
+		resp.Success = false
+		resp.Message = err.Error()
+		b, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(b))
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	resp.Title = postconfig.Title
+	resp.Permalink = postconfig.Permalink
+	resp.Categories = postconfig.Categories
+
+	resp.Success = true
+	resp.Message = ""
+	resp.PostFile = "source/_posts/" + slug + ".md"
+	resp.PostText = string(newpost)
+	resp.Slug = slug
+	b, _ := json.Marshal(resp)
+	fmt.Fprint(w, string(b))
 }
 
 func newPostHandler(w http.ResponseWriter, r *http.Request) {
