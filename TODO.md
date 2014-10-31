@@ -7,5 +7,6 @@
  * Packaging for distributions with wrappers, etc.
  * Go unit tests and benchmarks.
  * Friendly UI for those who aren't strictly talking to the API.
+ * Caching things like categories and posts.
  * <del>Versioned API (/api/VERSION/callgoeshere) for compatibility.</del>
 
