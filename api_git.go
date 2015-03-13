@@ -40,6 +40,8 @@ func gitCommitHandler(w http.ResponseWriter, r *http.Request) {
 	cmdGit := *gitcmd
 	argsGit := []string{
 		"commit",
+		"-m",
+		"\"Commit from Octopress API\"",
 		"source/_posts",
 	}
 	outGit, err := RunCmd(site.Location, cmdGit, argsGit)
