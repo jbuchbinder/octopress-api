@@ -3,14 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	"gopkg.in/v1/yaml"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
+
+	"github.com/gorilla/mux"
+	"gopkg.in/yaml.v2"
 )
 
 type listPostsResponse map[string]listPostItem

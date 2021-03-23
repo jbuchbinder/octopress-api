@@ -1,10 +1,11 @@
 package main
 
 import (
-	"gopkg.in/v1/yaml"
 	"io/ioutil"
 	"sort"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 func categoriesForSite(site Site) ([]string, error) {

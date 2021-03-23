@@ -2,11 +2,12 @@ package main
 
 import (
 	"flag"
-	auth "github.com/abbot/go-http-auth"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"time"
+
+	auth "github.com/abbot/go-http-auth"
+	"github.com/gorilla/mux"
 )
 
 const (

@@ -3,8 +3,9 @@ package main
 import (
 	"crypto/sha1"
 	"encoding/base64"
-	auth "github.com/abbot/go-http-auth"
 	"log"
+
+	auth "github.com/abbot/go-http-auth"
 )
 
 // SimpleSecurityProvider is a go-http-auth security provider which only

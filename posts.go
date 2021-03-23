@@ -2,9 +2,10 @@ package main
 
 import (
 	"errors"
-	"gopkg.in/v1/yaml"
 	"io/ioutil"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 type PostObject struct {
